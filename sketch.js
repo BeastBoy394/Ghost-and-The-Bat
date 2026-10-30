@@ -1,0 +1,140 @@
+
+let ghost = {
+  x: 240,
+  y: 180 
+};
+let enemy = {
+   x: 100,
+   y: 100
+};
+let score = 0;
+let duration = 60;
+let startTime;
+let state = 'start';
+let spawnEvery = 60;
+
+ function setup() {
+   createCanvas(480,360); 
+   startTime = millis();
+   spawnGhost();
+   spawnEnemy();
+};
+
+function draw(){
+  background (15,10,25);
+  noStroke();
+  fill(255,0,0)
+  rect(10,20,100,300);
+  fill (808080)
+  ellipse(340,40,50,50)
+  if (state === 'start') {
+    textAlign(CENTER, CENTER);
+    fill(255);
+    textSize(22);
+    text('Click to start', width / 2, height / 2);
+    return;
+  }
+
+  if (state === 'over') {
+    textAlign(CENTER, CENTER);
+    fill(255);
+    textSize(22);
+    text('Game over\nScore: ' + score + '\nClick to retry', width / 2, height / 2);
+    return;
+  }
+  let elapsed = (millis() - startTime) / 1000;
+  let timeLeft = max(0, duration - elapsed);
+  if (timeLeft <= 0) {
+    state = 'over';
+    return;
+}
+  ghost.x += random(-3, 3);
+  ghost.y += random(-3, 3);
+  drawGhost(ghost.x, ghost.y);
+
+  enemy.x += random(-3, 3);
+  enemy.y += random(-3, 3);
+  drawEnemy(enemy.x, enemy.y);
+  
+  fill(255);
+  textSize(16);
+  text('Score: ' + score, 12, 26);
+    
+  textAlign(RIGHT, TOP);
+  text('Time: ' + ceil(timeLeft), width - 12, 10);
+  if (frameCount % spawnEvery === 0) {
+   spawnGhost();
+   spawnEnemy();
+  };
+  drawGhost(ghost.x, ghost.y);
+  drawEnemy(enemy.x, enemy.y);
+  
+  textAlign(LEFT, TOP);
+  fill(255);
+  textSize(16);
+  text('Score: ' + score, 12, 10);
+  textAlign(RIGHT, TOP);
+  text('Time: ' + ceil(timeLeft), width - 12, 10);
+    
+  fill(128, 255, 255);  //lightpurple
+  rect(0,300,480,60);
+
+  
+}
+ function drawGhost(x,y){
+  fill(255, 255, 0); 
+  ellipse(x, y, 60, 60);
+  rect(x - 30, y, 60, 30);
+  
+  ellipse(x - 20, y + 30, 20, 20);
+  ellipse(x, y + 30, 20, 20);
+  ellipse(x + 20, y + 30, 20, 20);
+
+  fill(20);
+  ellipse(x - 10, y - 5, 8, 12);
+  ellipse(x + 10, y - 5, 8, 12);
+ }
+ function drawEnemy(x,y) {
+  fill(50); 
+  triangle(x, y, x - 35, y - 20, x - 25, y + 20);
+
+  triangle(x, y, x + 35, y - 20, x + 25, y + 20);
+
+  fill(80, 0, 120); 
+  ellipse(x, y, 40, 50);
+
+  triangle(x - 12, y - 20, x - 18, y - 35, x - 5, y - 22);
+  triangle(x + 12, y - 20, x + 18, y - 35, x + 5, y - 22);
+
+  fill(255, 0, 0);
+  ellipse(x - 8, y - 5, 6, 6);
+  ellipse(x + 8, y - 5, 6, 6);
+   
+ };
+
+ function spawnGhost() {
+  ghost = { x: random(40, width - 40), y: random(40, height - 40) };
+};
+ function spawnEnemy() {
+   enemy = {x: random(40,width-40), y: random(40, height-40)
+           };
+ };
+function mousePressed() {
+  if (state === 'start' || state === 'over') {
+    state = 'play';
+    score = 0;
+    startTime = millis();
+    spawnGhost();
+    return;
+  };
+  if (dist(mouseX, mouseY, ghost.x, ghost.y) < 30) {
+    score++;
+    spawnGhost();
+    return;
+   };
+  if (dist(mouseX, mouseY, enemy.x, enemy.y) < 30) {
+    score--;
+    spawnEnemy();
+    return;
+   };
+};
