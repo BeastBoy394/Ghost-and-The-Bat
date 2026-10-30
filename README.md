@@ -1,5 +1,5 @@
 A fun, fast-paced browser mini-game built using p5.js and JavaScript. Test your reflexes and see how high you can score before time runs out!
-🔗 Play the Game Live Here!
+🔗 https://beastboy394.github.io/Ghost-and-The-Bat/
 🎮 How to Play
 Objective: Score as much as you can before the time runs out!
 Scoring:
